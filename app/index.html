@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>SCRUM: Pizarra</title>
+
+        <link rel="stylesheet" href="css/bootstrap.min.css"/>}
+        <link rel="stylesheet" href="css/all.min.css"/>
+        <link rel="stylesheet" href="css/styles.css"/>
+    </head>
+    <body style="background-image: url('img/portada_2.jpeg');background-repeat: no-repeat;background-size: cover;">
+      <h1 style="text-align: center;">TABLA DE SCRUM</h1>
+        <div class="scrumboard row">
+            <div class="column flex">
+              <h1>Tareas <a style="cursor:pointer;" onclick="modalCrearTarjeta('divTareas')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
+              <div id="divTareas">
+                
+              </div>
+            </div>
+             
+            <div class="column flex">
+              <h1>Progreso <a style="cursor:pointer;" onclick="modalCrearTarjeta('divProgreso')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
+              <div id="divProgreso">
+
+              </div>
+            </div>
+
+            <div class="column flex">
+                <h1>Terminado <a style="cursor:pointer;" onclick="modalCrearTarjeta('divTerminado')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
+                <div id="divTerminado">
+                </div>
+            </div>
+                
+            <div class="column flex">
+                <h1>Validado <a style="cursor:pointer;" onclick="modalCrearTarjeta('divValidado')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
+                <div id="divValidado">
+                </div>
+            </div>
+
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootbox.min.js"></script>    
+        <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+        <script src="js/tabla_scrum.js" charset="utf-8"></script>
+        <script>
+          var socket = io();
+
+          const nick = prompt("Indicar tu usuario: ");
+          socket.emit("nombreUsuario", nick);
+
+        </script>
+    </body>
+</html>
