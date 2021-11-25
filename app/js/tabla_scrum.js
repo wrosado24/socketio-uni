@@ -7,11 +7,14 @@ const initializer = {
     this.portleToggle()
   },
   sortTable(){
-    $( ".column" ).sortable({
+    $( ".column").sortable({
       connectWith: ".column",
       handle: ".portlet-header",
       cancel: ".portlet-toggle",
       placeholder: "portlet-placeholder ui-corner-all",
+      beforeStop : function( event, ui ) {
+        alert("adsadsads")
+      }
     });
   },
   portle(){
@@ -70,7 +73,7 @@ function modalCrearTarjeta(idcol){
             className: 'btn-info',
             callback: function(){
               const json = {nombre: $("#nombre").val(), etiqueta: $("#etiquetas").val(),codigo: $("#codigo").val(), descripcion: $("#descripcion").val(), idcolumna: idcol}
-              agregarTareaPOST(json);
+              agregarTarjetaPOST(json);
             }
         }
     }
@@ -141,7 +144,7 @@ function modalActualizarTarjeta(codigo, nombre, etiqueta, descripcion, idcolumna
             className: 'btn-info',
             callback: function(){
               const json = {nombre: $("#nombre").val(), etiqueta: $("#etiquetas").val(),codigo: codigo, descripcion: $("#descripcion").val(), idcolumna: idcolumna}
-              actualizarTareaPOST(json)
+              actualizarTarjetaPOST(json)
             }
         }
     }
@@ -153,19 +156,19 @@ function modalActualizarTarjeta(codigo, nombre, etiqueta, descripcion, idcolumna
   });
 }
 
-//metodos para tareas
-function obtenerTareas(){
-  $.get("http://localhost:3000/obtenerTareas", (data)=>{
+//metodos GET
+function obtenerTarjetas(texto){
+  $.get("http://localhost:3000/obtenerTarjetas?valor="+texto,(data)=>{
     data.forEach(añadirTarjetaADOM)
   });
 }
 
-function agregarTareaPOST(json){
-  $.post("http://localhost:3000/agregarTarea", json);
+function agregarTarjetaPOST(json){
+  $.post("http://localhost:3000/agregarTarjeta?valor="+json.idcolumna, json);
 }
 
-function actualizarTareaPOST(json){
-  $.post("http://localhost:3000/actualizarTareas", json);
+function actualizarTarjetaPOST(json){
+  $.post("http://localhost:3000/actualizarTarjeta?valor="+json.idcolumna, json);
 }
 
 function actualizarTarjeta(json){
@@ -179,7 +182,10 @@ socket.on('actualizarTarjeta', actualizarTarjeta)
 
 init = () => {
   initializer.init();
-  obtenerTareas();
+  obtenerTarjetas("tareas");
+  obtenerTarjetas("progresos");
+  obtenerTarjetas("terminados");
+  obtenerTarjetas("validados");
 };
 
 init();

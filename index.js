@@ -33,13 +33,31 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname,'/app/index.html'));
 });
 
-//endpoints para tareas
-app.get('/obtenerTareas', (req, res)=>{
-   res.send(tareas);
+app.get('/obtenerTarjetas', (req, res)=>{
+  const opcion = req.query.valor
+  if(opcion == "tareas"){
+    res.send(tareas);
+  }else if(opcion == "progresos"){
+    res.send(en_progreso);
+  }else if(opcion == "terminados"){
+    res.send(terminado);
+  }else if(opcion == "validados"){
+    res.send(validado);
+  }
 });
 
-app.post('/agregarTarea', (req, res)=>{
-  tareas.push(req.body)
+app.post('/agregarTarjeta', (req, res)=>{
+
+  const opcion = req.query.valor
+  if(opcion == "tareas"){
+    tareas.push(req.body)
+  }else if(opcion == "progreso"){
+    en_progreso.push(req.body)
+  }else if(opcion == "terminado"){
+    terminado.push(req.body)
+  }else if(opcion == "validado"){
+    validado.push(req.body)
+  }
    io.emit("nuevaTarjeta", req.body)
    res.sendStatus(200)
 });
@@ -48,17 +66,49 @@ app.delete('/eliminarTareas', (req, res)=>{
    
 });
 
-app.post('/actualizarTareas', (req, res)=>{
-  console.log(req.body)
+app.post('/actualizarTarjeta', (req, res)=>{
+
+  const opcion = req.query.valor
   let codigoBody = req.body.codigo;
-  let indicePos = tareas.findIndex(item=> item.codigo === codigoBody);
-  if(indicePos !== -1){
-    tareas[indicePos] = req.body;
-    io.emit("actualizarTarjeta", req.body)
-    res.sendStatus(200)
-  }else{
-    res.sendStatus(500)
+
+  if(opcion == "tareas"){
+    let indicePos = tareas.findIndex(item=> item.codigo === codigoBody);
+    if(indicePos !== -1){
+      tareas[indicePos] = req.body;
+      io.emit("actualizarTarjeta", req.body)
+      res.sendStatus(200)
+    }else{
+      res.sendStatus(500)
+    }
+  }else if(opcion == "progreso"){
+    let indicePos = en_progreso.findIndex(item=> item.codigo === codigoBody);
+    if(indicePos !== -1){
+      en_progreso[indicePos] = req.body;
+      io.emit("actualizarTarjeta", req.body)
+      res.sendStatus(200)
+    }else{
+      res.sendStatus(500)
+    }
+  }else if(opcion == "terminado"){
+    let indicePos = terminado.findIndex(item=> item.codigo === codigoBody);
+    if(indicePos !== -1){
+      terminado[indicePos] = req.body;
+      io.emit("actualizarTarjeta", req.body)
+      res.sendStatus(200)
+    }else{
+      res.sendStatus(500)
+    }
+  }else if(opcion == "validado"){
+    let indicePos = validado.findIndex(item=> item.codigo === codigoBody);
+    if(indicePos !== -1){
+      validado[indicePos] = req.body;
+      io.emit("actualizarTarjeta", req.body)
+      res.sendStatus(200)
+    }else{
+      res.sendStatus(500)
+    }
   }
+  
 });
 
 
