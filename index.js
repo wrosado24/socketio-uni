@@ -3,15 +3,17 @@ const app = express();
 const path = require('path');
 const http = require('http');
 const server = http.createServer(app);
+const bodyParser = require('body-parser');
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.static('app'));
 
 var tareas = [{
-  iddiv: 'divTareas',
   nombre: 'Diseñador login',
+  idcolumna: 'tareas',
   codigo: 'dsa456',
   etiqueta: 'Requerimiento',
   descripcion: '_---'
@@ -36,16 +38,27 @@ app.get('/obtenerTareas', (req, res)=>{
    res.send(tareas);
 });
 
-app.post('/agregarTareas', (req, res)=>{
-   
+app.post('/agregarTarea', (req, res)=>{
+  tareas.push(req.body)
+   io.emit("nuevaTarjeta", req.body)
+   res.sendStatus(200)
 });
 
 app.delete('/eliminarTareas', (req, res)=>{
    
 });
 
-app.put('/actualizarTareas', (req, res)=>{
-   
+app.post('/actualizarTareas', (req, res)=>{
+  console.log(req.body)
+  let codigoBody = req.body.codigo;
+  let indicePos = tareas.findIndex(item=> item.codigo === codigoBody);
+  if(indicePos !== -1){
+    tareas[indicePos] = req.body;
+    io.emit("actualizarTarjeta", req.body)
+    res.sendStatus(200)
+  }else{
+    res.sendStatus(500)
+  }
 });
 
 

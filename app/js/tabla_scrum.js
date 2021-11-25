@@ -1,3 +1,5 @@
+var socket = io()
+
 const initializer = {
   init(){
     this.sortTable(),
@@ -27,7 +29,7 @@ const initializer = {
   }
 };
 
-function modalCrearTarjeta(idDiv){
+function modalCrearTarjeta(idcol){
   const modal = bootbox.dialog({
     title: 'Crear una tarjeta',
     message: `
@@ -67,8 +69,8 @@ function modalCrearTarjeta(idDiv){
             label: "Guardar",
             className: 'btn-info',
             callback: function(){
-              const json = {nombre: $("#nombre").val(), etiqueta: $("#etiquetas").val(),codigo: $("#codigo").val(), descripcion: $("#descripcion").val(), iddiv: idDiv}
-              añadirTarjetaADOM(json);
+              const json = {nombre: $("#nombre").val(), etiqueta: $("#etiquetas").val(),codigo: $("#codigo").val(), descripcion: $("#descripcion").val(), idcolumna: idcol}
+              agregarTareaPOST(json);
             }
         }
     }
@@ -95,25 +97,21 @@ function pintarEtiqueta(etiqueta) {
 }
 
 function añadirTarjetaADOM(json){
-  $(`#${json.iddiv}`).append(`<div style="cursor:pointer" class="portlet">
-    <div class="portlet-header">[${json.codigo}] - ${json.nombre}</div>
-    <div class="portlet-content">${pintarEtiqueta(json.etiqueta)}</div>
-    <div class="portlet-content"><button class="btn btn-primary btn-sm" onClick="modalActualizarTarjeta('${json.codigo}', '${json.nombre}', '${json.etiqueta}', '${json.descripcion}')">Ver Detalle</button></div>
-  </div>`)
+    $(`.${json.idcolumna}`).append(`<div style="cursor:pointer" class="portlet" id="tarjeta${json.codigo}">
+        <div class="portlet-header">[${json.codigo}] - ${json.nombre}</div>
+        <div class="portlet-content">${pintarEtiqueta(json.etiqueta)}</div>
+        <div class="portlet-content"><button class="btn btn-primary btn-sm" onClick="modalActualizarTarjeta('${json.codigo}', '${json.nombre}', '${json.etiqueta}', '${json.descripcion}', '${json.idcolumna}')">Ver Detalle</button></div>
+      </div>`)
 }
 
-function modalActualizarTarjeta(codigo, nombre, etiqueta, descripcion){
+function modalActualizarTarjeta(codigo, nombre, etiqueta, descripcion, idcolumna){
   const modal = bootbox.dialog({
-    title: 'Actualizar tarjeta',
+    title: 'Actualizar tarjeta: '+codigo,
     message: `
     <form>
       <div class="form-group">
         <label for="nombre">Nombre</label>
         <input type="text" class="form-control" id="nombre" value="${nombre}">
-      </div>
-      <div class="form-group">
-        <label for="codigo">Codigo</label>
-        <input type="text" class="form-control" id="codigo" value="${codigo}" disabled="true">
       </div>
       <div class="form-group">
         <label for="etiquetas">Etiquetas</label>
@@ -142,8 +140,8 @@ function modalActualizarTarjeta(codigo, nombre, etiqueta, descripcion){
             label: "Actualizar",
             className: 'btn-info',
             callback: function(){
-              const json = {nombre: $("#nombre").val(), etiqueta: $("#etiquetas").val(),codigo: $("#codigo").val(), descripcion: $("#descripcion").val(), iddiv: idDiv}
-              //añadirTarjetaADOM(json);
+              const json = {nombre: $("#nombre").val(), etiqueta: $("#etiquetas").val(),codigo: codigo, descripcion: $("#descripcion").val(), idcolumna: idcolumna}
+              actualizarTareaPOST(json)
             }
         }
     }
@@ -155,20 +153,29 @@ function modalActualizarTarjeta(codigo, nombre, etiqueta, descripcion){
   });
 }
 
-function pintarTareas(json){
-  $(`#${json.iddiv}`).append(`<div style="cursor:pointer" class="portlet">
-  <div class="portlet-header">[${json.codigo}] - ${json.nombre}</div>
-  <div class="portlet-content">${pintarEtiqueta(json.etiqueta)}</div>
-  <div class="portlet-content"><button class="btn btn-primary btn-sm" onClick="modalActualizarTarjeta('${json.codigo}', '${json.nombre}', '${json.etiqueta}', '${json.descripcion}')">Ver Detalle</button></div>
-</div>`)
-}
-
+//metodos para tareas
 function obtenerTareas(){
   $.get("http://localhost:3000/obtenerTareas", (data)=>{
-    data.forEach(pintarTareas)
+    data.forEach(añadirTarjetaADOM)
   });
 }
 
+function agregarTareaPOST(json){
+  $.post("http://localhost:3000/agregarTarea", json);
+}
+
+function actualizarTareaPOST(json){
+  $.post("http://localhost:3000/actualizarTareas", json);
+}
+
+function actualizarTarjeta(json){
+  $('#tarjeta'+json.codigo).html(`<div class="portlet-header">[${json.codigo}] - ${json.nombre}</div>
+  <div class="portlet-content">${pintarEtiqueta(json.etiqueta)}</div>
+  <div class="portlet-content"><button class="btn btn-primary btn-sm" onClick="modalActualizarTarjeta('${json.codigo}', '${json.nombre}', '${json.etiqueta}', '${json.descripcion}', '${json.idcolumna}')">Ver Detalle</button></div>`)
+}
+
+socket.on('nuevaTarjeta', añadirTarjetaADOM)
+socket.on('actualizarTarjeta', actualizarTarjeta)
 
 init = () => {
   initializer.init();

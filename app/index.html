@@ -4,41 +4,57 @@
         <meta charset="utf-8">
         <title>SCRUM: Pizarra</title>
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Concert+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/bootstrap.min.css"/>}
         <link rel="stylesheet" href="css/all.min.css"/>
         <link rel="stylesheet" href="css/styles.css"/>
+        <link rel="stylesheet" href="css/hint.css"/>
     </head>
     <body style="background-image: url('img/portada_2.jpeg');background-repeat: no-repeat;background-size: cover;">
-      <h1 style="text-align: center;">TABLA DE SCRUM</h1>
+      <h1 style="text-align: center;font-family: 'Alfa Slab One', cursive;">TABLA DE SCRUM</h1>
+        <div class="contenedor">
+    
+        </div>
+        <div class="contenedor">
+          
+        </div>
+        
         <div class="scrumboard row">
-            <div class="column flex">
-              <h1>Tareas <a style="cursor:pointer;" onclick="modalCrearTarjeta('divTareas')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
-              <div id="divTareas">
-                
-              </div>
+            <div class="column flex tareas">
+                <h1 class="titulo" style="text-align:center;color:black;font-family: 'Concert One', cursive;">Tareas
+                  <span class="hint--bottom" aria-label="Agregar Tarjeta a Tareas">
+                  <a style="cursor:pointer;" onclick="modalCrearTarjeta('tareas')">
+                    <i class="fas fa-plus" style="font-size:35px;"></i></a>
+                  </span>
+                </h1>
             </div>
              
-            <div class="column flex">
-              <h1>Progreso <a style="cursor:pointer;" onclick="modalCrearTarjeta('divProgreso')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
-              <div id="divProgreso">
-
-              </div>
+            <div class="column flex progreso">
+              <h1 class="titulo" style="text-align:center;color:black;font-family: 'Concert One', cursive;">Progreso
+                <span class="hint--bottom" aria-label="Agregar Tarjeta a Progreso">
+                 <a style="cursor:pointer;" onclick="modalCrearTarjeta('progreso')">
+                  <i class="fas fa-plus" style="font-size:35px;"></i></a>
+                </span>
+              </h1>
             </div>
 
-            <div class="column flex">
-                <h1>Terminado <a style="cursor:pointer;" onclick="modalCrearTarjeta('divTerminado')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
-                <div id="divTerminado">
-                </div>
+            <div class="column flex terminado">
+                <h1 class="titulo" style="text-align:center;color:black;font-family: 'Concert One', cursive;">Terminado <a style="cursor:pointer;" onclick="modalCrearTarjeta('terminado')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
+  
             </div>
                 
-            <div class="column flex">
-                <h1>Validado <a style="cursor:pointer;" onclick="modalCrearTarjeta('divValidado')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
-                <div id="divValidado">
-                </div>
+            <div class="column flex validado">
+                <h1 class="titulo" style="text-align:center;color:black;font-family: 'Concert One', cursive;">Validado <a style="cursor:pointer;" onclick="modalCrearTarjeta('validado')"><i class="fas fa-plus" style="font-size:35px;"></i></a></h1>
+
             </div>
 
         </div>
-
+        <center><span style="color:white;">Trabajo de Socketio para el Curso de Sistemas Distribuidos</span></center>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
@@ -48,8 +64,8 @@
         <script>
           var socket = io();
 
-          const nick = prompt("Indicar tu usuario: ");
-          socket.emit("nombreUsuario", nick);
+          //const nick = prompt("Indicar tu usuario: ");
+          //socket.emit("nombreUsuario", nick);
 
         </script>
     </body>
